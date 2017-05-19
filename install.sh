@@ -391,15 +391,6 @@ install_python_libraries_and_run_edx_playbook()
     popd
     popd
 }
-open_important_directories()
-{
-    pushd $CURRENT_SCRIPT_PATH/scripts
-
-    verify_file_exists "open-all.sh"
-    source open-all.sh
-
-    popd
-}
 
 # --- Core functionality End --- #
 
@@ -449,8 +440,6 @@ install_ansible
 write_settings_to_file
 
 install_python_libraries_and_run_edx_playbook
-
-open_important_directories
 
 echo
 echo "Complete success!"

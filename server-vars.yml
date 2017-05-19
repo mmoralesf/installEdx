@@ -24,6 +24,8 @@ EDXAPP_PYTHON_SANDBOX: false
 #EDXAPP_ENABLE_THIRD_PARY_AUTH: true
 #EDXAPP_ENABLE_OAUTH2_PROVIDER: true
 
+SEARCH_ENGINE: "search.elastic.ElasticSearchEngine"
+
 # Configure Open edX features
 # see: http://edx.readthedocs.org/projects/edx-installing-configuring-and-running/en/latest/feature_flags/feature_flag_index.html
 EDXAPP_FEATURES:
@@ -35,6 +37,11 @@ EDXAPP_FEATURES:
   PREVIEW_LMS_BASE: "{{ EDXAPP_PREVIEW_LMS_BASE }}"
   DISABLE_COURSE_CREATION: false
   ALLOW_ALL_ADVANCED_COMPONENTS: true
+  ENABLE_COURSEWARE_SEARCH: true
+  ENABLE_DASHBOARD_SEARCH: true
+  ENABLE_COURSE_DISCOVERY: true
+  ENABLE_COURSEWARE_INDEX: true
+  ENABLE_LIBRARY_INDEX: true
 
 #EDXAPP_NO_PREREQ_INSTALL: 0
 
