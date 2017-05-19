@@ -11,7 +11,7 @@ set -xe
 
 # --- Parameters Start --- #
     # Most BRANCHes
-    export OPENEDX_RELEASE="open-release/eucalyptus.3" # or named-release/dogwood.rc , etc.
+    export OPENEDX_RELEASE="open-release/ficus.master" # or "open-release/eucalyptus.3" # or named-release/dogwood.rc , etc.
     # No need to specify org, folder, or repository url
 
     # edx-platform BRANCH override
