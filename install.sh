@@ -373,7 +373,7 @@ install_python_libraries_and_run_edx_playbook()
 
             # Try removing the often problematic jdk-*-linux-x64.tar.gz.
             #todo:optimization we don't have to do this if the hash is on https://www.oracle.com/webfolder/s/digest/8u65checksum.html
-            rm $TEMP_DIR/jdk-*-linux-x64.tar.gz	
+            #rm $TEMP_DIR/jdk-*-linux-x64.tar.gz	
 
             # Try removing the often problematic mysql ppa before updating.
             rm /etc/apt/sources.list.d/repo_mysql*
