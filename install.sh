@@ -74,8 +74,7 @@ help()
 }
 parse_args()
 {
-    while [[ "$#" -gt 0 ]]
-        do
+    while [[ "$#" -gt 0 ]] ; do
 
         echo "Option $1 set with value $2"
 
@@ -135,18 +134,18 @@ parse_args()
 set_variables()
 {
     # Branches
-    if [ -z $OPENEDX_RELEASE ]; then
+    if [[ -z $OPENEDX_RELEASE ]] ; then
         echo " -b|--branches needs to be valid"
         echo "OPENEDX_RELEASE is currently $OPENEDX_RELEASE"
         exit 4
     fi
-    if [ -z $EDX_RELEASE ]; then
+    if [[ -z $EDX_RELEASE ]] ; then
         export EDX_RELEASE=$OPENEDX_RELEASE
     fi
-    if [ -z $CONFIGURATION_VERSION ]; then
+    if [[ -z $CONFIGURATION_VERSION ]] ; then
         export CONFIGURATION_VERSION=$OPENEDX_RELEASE
     fi
-    if [ -z $BOOTSTRAP_CONFIGURATION_VERSION ]; then
+    if [[ -z $BOOTSTRAP_CONFIGURATION_VERSION ]] ; then
         BOOTSTRAP_CONFIGURATION_VERSION=$OPENEDX_RELEASE
     fi
 
@@ -161,7 +160,7 @@ set_variables()
 verify_file_exists()
 {
     FILE_PATH=$1
-    if [ ! -f $FILE_PATH ]; then
+    if [[ ! -f $FILE_PATH ]] ; then
         echo "No file exists at path: $FILE_PATH"
         echo "Exiting script"
         exit 3
@@ -176,7 +175,7 @@ get_repo_url()
 # --- Preconditions Start --- #
 verify_org_type() {
     # Restrict to supported values.
-    if [ $1 != "edx" ] && [ $1 != "Microsoft" ]; then
+    if [[ $1 != "edx" ]] && [[ $1 != "Microsoft" ]] ; then
         echo "Please specify edx or Microsoft (with $2 argument)"
         echo "Exiting script"
         exit 1
@@ -184,7 +183,7 @@ verify_org_type() {
 }
 verify_conf_folder() {
     # Restrict to supported values.
-    if [ $1 != "configuration" ] && [ $1 != "edx-configuration" ]; then
+    if [[ $1 != "configuration" ]] && [[ $1 != "edx-configuration" ]] ; then
         echo "Please specify configuration or edx-configuration (with $2 argument)"
         echo "Exiting script"
         exit 1
@@ -192,7 +191,7 @@ verify_conf_folder() {
 }
 verify_stack_type() {
     # Restrict to supported values.
-    if [ $STACK_TYPE != "dev" ] && [ $STACK_TYPE != "full" ]; then
+    if [[ $STACK_TYPE != "dev" ]] && [[ $STACK_TYPE != "full" ]] ; then
         echo "Please specify fullstack or devstack (with -s|--stack argument full or dev)"
         echo "Exiting script"
         exit 1
@@ -202,7 +201,7 @@ verify_bootstrap_enlistment()
 {
     pushd $TEMP_DIR
 
-    if [ ! -d $BOOTSTRAP_CONFIGURATION_FOLDER ]; then
+    if [[ ! -d $BOOTSTRAP_CONFIGURATION_FOLDER ]] ; then
         git clone $BOOTSTRAP_CONFIGURATION_REPO
     fi
 
@@ -215,18 +214,17 @@ verify_bootstrap_enlistment()
 }
 update_packages()
 {
-    for (( b=1; b<=3; b++ ))
-    do
+    for (( b=1; b<=3; b++ )) ; do
         echo
         echo "$1 packages..."
         echo
         sudo apt-get $1 -y -qq --fix-missing
-        if [ $? -eq 0 ]; then
+        if [[ $? -eq 0 ]] ; then
             break
         else
             echo "$1 failed"
 
-            if [ $b -eq 3 ]; then
+            if [[ $b -eq 3 ]] ; then
                 echo "Exiting script"
                 exit 6
             fi
@@ -244,7 +242,7 @@ verify_git()
 }
 verify_ssh()
 {
-    if [ ! -f "/etc/ssh/sshd_config" ]; then
+    if [[ ! -f "/etc/ssh/sshd_config" ]] ; then
         echo "installing ssh..."
         update_packages "install ssh --force-yes"
     fi
@@ -259,7 +257,7 @@ verify_curl()
 verify_browsers()
 {
     # Dev stack installs chrome and firefox and can fail if the browsers already exist.
-    if [ $STACK_TYPE == "dev" ]; then
+    if [[ $STACK_TYPE == "dev" ]] ; then
         if type firefox >/dev/null 2>&1 ; then
             echo "Un-installing firefox...The proper version will be installed later"
             update_packages "purge firefox"
@@ -277,9 +275,9 @@ verify_browsers()
 verify_vagrant_user()
 {
     # Dev stack expects vagrant user
-    if [ $STACK_TYPE == "dev" ]; then
+    if [[ $STACK_TYPE == "dev" ]] ; then
         vHome="/home/$VAGRANT"
-        if [ ! -d $vHome ]; then
+        if [[ ! -d $vHome ]] ; then
             useradd -d $vHome -m $VAGRANT
             echo -e "$VAGRANT\n$VAGRANT\n" | passwd $VAGRANT
         fi
@@ -292,7 +290,7 @@ install_ansible()
 {
     # Only try if we haven't already fully succeeded already.
     # We can use the next functions result as test for now.
-    if [ ! -f $CURRENT_SCRIPT_PATH/$RUNTIME_YAML ]; then
+    if [[ ! -f $CURRENT_SCRIPT_PATH/$RUNTIME_YAML ]] ; then
         pushd $TEMP_DIR/$BOOTSTRAP_CONFIGURATION_FOLDER/util/install
 
         INSTALL_SCRIPT="ansible-bootstrap.sh"
@@ -356,8 +354,7 @@ install_python_libraries_and_run_edx_playbook()
     # Disable "immediate exit" on errors to allow for retry
     set +e
 
-    for (( a=1; a<=13; a++ ))
-    do
+    for (( a=1; a<=13; a++ )) ; do
         echo
         echo "STARTING - ${STACK_TYPE}stack - attempt number: $a"
         echo
@@ -365,7 +362,7 @@ install_python_libraries_and_run_edx_playbook()
         params="${playBook}.yml -e@$ANSIBLE_ROOT/server-vars.yml -e@$ANSIBLE_ROOT/$RUNTIME_YAML "
         ansible-playbook -i localhost, -c local $params
 
-        if [ $? -eq 0 ]; then
+        if [[ $? -eq 0 ]] ; then
             echo "SUCCEEDED - ${STACK_TYPE}stack - attempt number: $a !"
             break
         else
@@ -382,7 +379,7 @@ install_python_libraries_and_run_edx_playbook()
             update_packages "install -f"
             update_packages "upgrade -f"
 
-            if [ $a -eq 13 ]; then
+            if [[ $a -eq 13 ]] ; then
                 echo "Installation Failed. Exiting script"
                 exit 5
             fi
@@ -450,4 +447,6 @@ echo "Complete success!"
 echo
 # --- Execution End --- #
 
-/edx/bin/supervisorctl status
+if [[ $STACK_TYPE == "full" ]] ; then
+    /edx/bin/supervisorctl status
+fi
